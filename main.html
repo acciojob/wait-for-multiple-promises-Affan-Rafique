@@ -1,33 +1,45 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Promise Table</title>
+</head>
+<body>
+  <table id="output">
+    <tr id="loading"><td>Loading...</td></tr>
+  </table>
 
-<html>
-  <head>
-    <link rel="stylesheet" href="styles.css" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-      crossorigin="anonymous"
-    />
-  </head>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const output = document.getElementById("output");
 
-  <body>
-    <!-- the entire body must be written by student -->
-    <table class="table table-striped table-hover table-bordered">
-      <thead>
-        <tr>
-          <th>Promise Name</th>
-          <th>Time taken (s)</th>
-        </tr>
-      </thead>
-      <tbody id="output"></tbody>
-    </table>
+      // Generate random numbers between 1–3
+      const getRandomValue = () => Math.floor(Math.random() * 3) + 1;
 
-    <script type="text/javascript" src="./script.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+      // Create promises that resolve after different times
+      const p1 = new Promise(res => setTimeout(() => res(["Promise 1", getRandomValue()]), 1000));
+      const p2 = new Promise(res => setTimeout(() => res(["Promise 2", getRandomValue()]), 1500));
+      const p3 = new Promise(res => setTimeout(() => res(["Promise 3", getRandomValue()]), 2000));
+
+      // Wait for all promises to complete
+      Promise.all([p1, p2, p3]).then(results => {
+        // Remove "Loading..."
+        output.innerHTML = "";
+
+        let total = 0;
+        results.forEach(([name, value]) => {
+          total += value;
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${name}</td><td>${value}</td>`;
+          output.appendChild(row);
+        });
+
+        // Add total row
+        const totalRow = document.createElement("tr");
+        totalRow.innerHTML = `<td>Total</td><td>${total}</td>`;
+        output.appendChild(totalRow);
+      });
+    });
+  </script>
+</body>
 </html>
